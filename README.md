@@ -40,8 +40,9 @@ The primary objective of this project is to analyze Amazon's e-commerce data to:
 5.	Interactive Dashboard: Deployment of an interactive Streamlit dashboard for real-time data exploration and decision-making.
 
 ##Purpose of Each Analysis Step:
+
 1.	Exploratory Data Analysis (EDA):
-   o	Purpose:
+    o	Purpose:
       ▪	To understand the dataset’s structure, distribution, and key features.
       ▪	To identify trends, patterns, and potential outliers.
    o	Contribution:
@@ -155,57 +156,55 @@ Recommendations:
  
 Analysis of Customer Segments using PCA
 1. Overview of the Visualization
-●	The scatter plot represents customer segmentation using Principal Component Analysis (PCA).
-●	PCA reduces the dimensionality of the dataset, allowing for better visualization of customer clusters.
-●	Each point corresponds to a customer, positioned according to its transformed features.
+   ●	The scatter plot represents customer segmentation using Principal Component Analysis (PCA).
+   ●	PCA reduces the dimensionality of the dataset, allowing for better visualization of customer clusters.
+   ●	Each point corresponds to a customer, positioned according to its transformed features.
 2. Key Observations
-●	Clusters (Segments 0, 1, 2, 3)
-○	Purple (Segment 0): Densely packed, mostly near the origin, indicating a core group of customers with similar purchasing behavior.
-○	Blue (Segment 1): More dispersed, spreading horizontally along PCA Component 1, possibly representing diverse spending patterns.
-○	Green (Segment 2): Positioned towards the upper-left, indicating a unique subset of customers with distinct behavior.
-○	Yellow (Segment 3): Overlapping with purple but slightly spread out, suggesting customers with some behavioral similarities but minor variations.
+   ●	Clusters (Segments 0, 1, 2, 3)
+   ○	Purple (Segment 0): Densely packed, mostly near the origin, indicating a core group of customers with similar                purchasing behavior.
+   ○	Blue (Segment 1): More dispersed, spreading horizontally along PCA Component 1, possibly representing diverse                spending patterns.
+   ○	Green (Segment 2): Positioned towards the upper-left, indicating a unique subset of customers with distinct behavior.
+   ○	Yellow (Segment 3): Overlapping with purple but slightly spread out, suggesting customers with some behavioral             similarities but minor variations.
 3. Insights from Clustering
-●	Purple and Yellow clusters (Segments 0 & 3) seem closely related, possibly indicating similar purchasing trends with minor distinctions.
-●	Blue cluster (Segment 1) extends significantly along the PCA Component 1 axis, suggesting a wider range of customer activity levels.
-●	Green cluster (Segment 2) is sparsely populated and slightly separated, indicating customers with unique characteristics (e.g., high-value customers or outliers).
+   ●	Purple and Yellow clusters (Segments 0 & 3) seem closely related, possibly indicating similar purchasing trends with       minor distinctions.
+   ●	Blue cluster (Segment 1) extends significantly along the PCA Component 1 axis, suggesting a wider range of customer       activity levels.
+   ●	Green cluster (Segment 2) is sparsely populated and slightly separated, indicating customers with unique                   characteristics (e.g., high-value customers or outliers).
 4. Business Implications
-●	Segment 0 & 3 (Core Customers): Targeted retention strategies, loyalty programs, and personalized promotions could enhance engagement.
-●	Segment 1 (Diverse Customers): A flexible marketing approach may be needed, as they exhibit varied behavior.
-●	Segment 2 (Outliers or High-Value Customers): Premium services, personalized recommendations, and VIP treatment could boost revenue.
+   ●	Segment 0 & 3 (Core Customers): Targeted retention strategies, loyalty programs, and personalized promotions could          enhance engagement.
+   ●	Segment 1 (Diverse Customers): A flexible marketing approach may be needed, as they exhibit varied behavior.
+   ●	Segment 2 (Outliers or High-Value Customers): Premium services, personalized recommendations, and VIP treatment could       boost revenue.
 
-
- 
 Analysis of Customer Segment Distribution
 1. Overview of the Visualization
-●	This bar chart represents the distribution of customers across different segments.
-●	The x-axis represents the customer segments (0, 1, 2, 3).
-●	The y-axis represents the count of customers in each segment.
+   ●	This bar chart represents the distribution of customers across different segments.
+   ●	The x-axis represents the customer segments (0, 1, 2, 3).
+   ●	The y-axis represents the count of customers in each segment.
 2. Key Observations
-●	Segment 3 (Green) has the highest number of customers (~850+).
-○	This suggests that the majority of customers fall into this segment.
-●	Segment 0 (Dark Blue) is the second-largest group (~470 customers).
-○	A significant portion of the customer base belongs here.
-●	Segment 1 (Teal) and Segment 2 (Light Green) are the smallest groups.
-○	Segment 1 has around 100 customers.
-○	Segment 2 has even fewer, likely under 50 customers.
+   ●	Segment 3 (Green) has the highest number of customers (~850+).
+      ○	This suggests that the majority of customers fall into this segment.
+   ●	Segment 0 (Dark Blue) is the second-largest group (~470 customers).
+      ○	A significant portion of the customer base belongs here.
+   ●	Segment 1 (Teal) and Segment 2 (Light Green) are the smallest groups.
+      ○	Segment 1 has around 100 customers.
+      ○	Segment 2 has even fewer, likely under 50 customers.
 Analysis:
 1.	Segment 0:
-○	This is the largest customer segment with over 800 customers.
-○	Indicates that most customers fall into this group.
+   ○	This is the largest customer segment with over 800 customers.
+   ○	Indicates that most customers fall into this group.
 2.	Segment 1:
-○	The second-largest group with approximately 500 customers.
-○	A significant portion of the customer base also belongs to this segment.
+   ○	The second-largest group with approximately 500 customers.
+   ○	A significant portion of the customer base also belongs to this segment.
 3.	Segment 2:
-○	A smaller group with fewer than 200 customers.
-○	Represents a specialized or niche segment.
+   ○	A smaller group with fewer than 200 customers.
+   ○	Represents a specialized or niche segment.
 4.	Segment 3:
-○	The smallest group with fewer than 100 customers.
-○	Likely represents a highly specific or premium customer base.
+   ○	The smallest group with fewer than 100 customers.
+   ○	Likely represents a highly specific or premium customer base.
 ________________________________________
 Observations:
-●	The majority of customers are concentrated in segments 0 and 1, indicating these segments are more dominant or broadly defined.
-●	Segments 2 and 3 are much smaller, possibly representing specialized, high-value, or less common customer categories.
-●	Segment 0 might require tailored strategies to manage its large size, while segments 2 and 3 may need focused attention to grow.
+   ●	The majority of customers are concentrated in segments 0 and 1, indicating these segments are more dominant or                broadly defined.
+   ●	Segments 2 and 3 are much smaller, possibly representing specialized, high-value, or less common customer categories.
+   ●	Segment 0 might require tailored strategies to manage its large size, while segments 2 and 3 may need focused                attention to grow.
 
 3. Business Implications
 Segment 0:
@@ -644,5 +643,35 @@ Analysis of Customer Segments Based on Sentiment
 
 ○	A very low number of neutral reviews may indicate that customers with mixed opinions are either not leaving reviews or are choosing sides.
 ○	Action: Encourage constructive feedback to identify areas for improvement.
+![image](https://github.com/user-attachments/assets/f3d16fce-5503-46c5-9190-14b2b3d4f551)
+![image](https://github.com/user-attachments/assets/f6773629-92be-45ca-bd52-9038e79dcfa2)
+
+![image](https://github.com/user-attachments/assets/cfef4a22-7e1d-4b32-916c-1b6a6b76b7f2)
+![image](https://github.com/user-attachments/assets/04dc9fa9-442a-4af5-adb3-2e5e44d76c6c)
+
+![image](https://github.com/user-attachments/assets/0aeb8302-7980-43de-846e-34982fadbebb)
+
+![image](https://github.com/user-attachments/assets/8dac5d59-3f3d-4b19-96dc-32672ec6adac)
+![image](https://github.com/user-attachments/assets/2ed5d152-7a44-4f53-ba79-7f15439e0102)
+![image](https://github.com/user-attachments/assets/820eec13-285f-4aac-aa6d-3f70dc8f59c8)
+![image](https://github.com/user-attachments/assets/9bec7e93-b352-4592-9e1f-5b4ff8aae842)
 
 
+![image](https://github.com/user-attachments/assets/22a72934-8cc6-4e96-b435-8bcdf26559e9)
+![image](https://github.com/user-attachments/assets/516eaaf9-3ec7-459a-b4c0-168b0b1d7ba0)
+
+![image](https://github.com/user-attachments/assets/3a69e5c3-692a-490e-b25b-c4e47dc9c1d2)
+![image](https://github.com/user-attachments/assets/2d7d8d3d-04bd-4c25-ae02-f4f2a3fa71f3)
+
+
+![image](https://github.com/user-attachments/assets/0b243870-d78a-43a6-be02-39f25dd12a67)
+![image](https://github.com/user-attachments/assets/b493524f-9d3e-4c68-8747-eb6c4ac98661)
+![image](https://github.com/user-attachments/assets/56cb721d-9e6e-4bcc-8080-4f17a599605d)
+![image](https://github.com/user-attachments/assets/7a8060cc-f4e5-49ac-99dd-9e9735813efa)
+![image](https://github.com/user-attachments/assets/376b8c38-393c-434b-bb16-dd5a9d47ffe6)
+
+![image](https://github.com/user-attachments/assets/b8402023-e1d4-4815-9a75-6c2cb204b505)
+![image](https://github.com/user-attachments/assets/23c3e18e-65f5-4664-acfb-ed4db26ce9ca)
+
+![image](https://github.com/user-attachments/assets/7daa4c9e-9507-473f-b00d-b3ac667001b7)
+![image](https://github.com/user-attachments/assets/175fa4ed-b29c-4167-8009-7d51513a8c72)
