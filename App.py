@@ -40,10 +40,10 @@ st.write("Missing values before cleaning:", missing_values)
 df_cleaned = df.dropna(subset=critical_columns)
 
 # Normalize and clean numeric columns
-df_cleaned['actual_price'] = df_cleaned['actual_price'].str.replace('₹', '').str.replace(',', '').astype(float)
-df_cleaned['discounted_price'] = df_cleaned['discounted_price'].str.replace('₹', '').str.replace(',', '').astype(float)
+df_cleaned['actual_price'] = df_cleaned['actual_price'].str.replace('₹', '', regex=True).str.replace(',', '', regex=True).astype(float)
+df_cleaned['discounted_price'] = df_cleaned['discounted_price'].str.replace('₹', '', regex=True).str.replace(',', '', regex=True).astype(float)
 df_cleaned['rating'] = pd.to_numeric(df_cleaned['rating'], errors='coerce')
-df_cleaned['rating_count'] = df_cleaned['rating_count'].str.replace(',', '').astype(float)
+df_cleaned['rating_count'] = df_cleaned['rating_count'].str.replace(',', '', regex=True).astype(float)
 
 # Impute missing ratings with median
 imputer = SimpleImputer(strategy='median')
@@ -79,7 +79,7 @@ X_scaled = scaler.fit_transform(X)
 # Elbow Method for K-Means
 inertia = []
 for k in range(1, 11):
-    kmeans = KMeans(n_clusters=k, random_state=42)
+    kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
     kmeans.fit(X_scaled)
     inertia.append(kmeans.inertia_)
 
@@ -92,7 +92,7 @@ st.pyplot(fig)
 
 # Apply K-Means Clustering
 optimal_clusters = 4
-kmeans = KMeans(n_clusters=optimal_clusters, random_state=42)
+kmeans = KMeans(n_clusters=optimal_clusters, random_state=42, n_init=10)
 df_cleaned['customer_segment'] = kmeans.fit_predict(X_scaled)
 
 # PCA for cluster visualization
@@ -106,22 +106,36 @@ sns.scatterplot(x='PCA1', y='PCA2', hue='customer_segment', data=df_cleaned, pal
 ax.set_title('Customer Segments Visualization using PCA')
 st.pyplot(fig)
 
-# Association Rule Mining
-transactions = df_cleaned.groupby(['product_id', 'main_category']).size().reset_index().values.tolist()
-te = TransactionEncoder()
-te_array = te.fit(transactions).transform(transactions)
-df_encoded = pd.DataFrame(te_array, columns=te.columns_)
+# Association Rule Mining (Fixed)
+st.subheader("Association Rule Mining")
 
-frequent_itemsets = apriori(df_encoded, min_support=0.01, use_colnames=True)
-rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.2)
-rules = rules.sort_values(by='lift', ascending=False)
+# Properly format transactions for TransactionEncoder
+if 'main_category' in df_cleaned.columns:
+    transactions = df_cleaned.groupby('product_id')['main_category'].apply(list).tolist()
 
-st.write("Top Association Rules:")
-st.dataframe(rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']].head(10))
+    te = TransactionEncoder()
+    te_array = te.fit(transactions).transform(transactions)
+    df_encoded = pd.DataFrame(te_array, columns=te.columns_)
+
+    frequent_itemsets = apriori(df_encoded, min_support=0.01, use_colnames=True)
+    
+    if not frequent_itemsets.empty:
+        rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.2)
+        rules = rules.sort_values(by='lift', ascending=False)
+
+        st.write("Top Association Rules:")
+        st.dataframe(rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']].head(10))
+    else:
+        st.warning("No frequent itemsets found. Try adjusting the support threshold.")
+else:
+    st.warning("The dataset does not contain the 'main_category' column required for association rule mining.")
 
 # Sentiment Analysis
-if 'review_content' in df_cleaned.columns:
+if 'review_content' in df_cleaned.columns and df_cleaned['review_content'].notnull().any():
     st.subheader("Sentiment Analysis")
+    
+    # Handle NaN values before applying TextBlob
+    df_cleaned['review_content'].fillna('', inplace=True)
     df_cleaned['sentiment'] = df_cleaned['review_content'].apply(lambda x: TextBlob(str(x)).sentiment.polarity)
 
     fig, ax = plt.subplots(figsize=(10, 6))
@@ -139,4 +153,6 @@ if 'review_content' in df_cleaned.columns:
     ax.set_title('Word Cloud of Review Content')
     st.pyplot(fig)
 else:
-    st.warning("The dataset does not contain review content for sentiment analysis.")
+    st.warning("The dataset does not contain valid review content for sentiment analysis.")
+
+
