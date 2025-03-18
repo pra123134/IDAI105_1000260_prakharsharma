@@ -4,21 +4,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.metrics.pairwise import euclidean_distances, cosine_similarity
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
-from sklearn.tree import DecisionTreeClassifier, plot_tree
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report
-from scipy.stats import ttest_ind
 from sklearn.impute import SimpleImputer
 from mlxtend.preprocessing import TransactionEncoder
 from mlxtend.frequent_patterns import apriori, association_rules
 from wordcloud import WordCloud, STOPWORDS
 from textblob import TextBlob
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.decomposition import LatentDirichletAllocation
-
 import streamlit as st
 
 # Title of the Streamlit app
@@ -35,20 +27,29 @@ else:
 # Step 1: Handle Missing Values
 st.subheader("Data Cleaning and Preprocessing")
 critical_columns = ['product_id', 'actual_price', 'discounted_price', 'rating', 'rating_count', 'category']
+
+# Check for missing critical columns
+if not all(col in df.columns for col in critical_columns):
+    st.error("The uploaded dataset does not contain all required columns.")
+    st.stop()
+
 missing_values = df[critical_columns].isnull().sum()
 st.write("Missing values before cleaning:", missing_values)
 
+# Drop rows with missing critical values
 df_cleaned = df.dropna(subset=critical_columns)
 
-# Remove non-numeric characters and normalize data
+# Normalize and clean numeric columns
 df_cleaned['actual_price'] = df_cleaned['actual_price'].str.replace('₹', '').str.replace(',', '').astype(float)
 df_cleaned['discounted_price'] = df_cleaned['discounted_price'].str.replace('₹', '').str.replace(',', '').astype(float)
 df_cleaned['rating'] = pd.to_numeric(df_cleaned['rating'], errors='coerce')
 df_cleaned['rating_count'] = df_cleaned['rating_count'].str.replace(',', '').astype(float)
 
+# Impute missing ratings with median
 imputer = SimpleImputer(strategy='median')
 df_cleaned['rating'] = imputer.fit_transform(df_cleaned[['rating']])
 
+# Standardize numeric columns
 scaler = StandardScaler()
 numerical_columns = ['actual_price', 'discounted_price', 'rating', 'rating_count']
 df_cleaned[numerical_columns] = scaler.fit_transform(df_cleaned[numerical_columns])
@@ -75,6 +76,7 @@ features = ['discounted_price', 'actual_price', 'main_category_encoded', 'rating
 X = df_cleaned[features]
 X_scaled = scaler.fit_transform(X)
 
+# Elbow Method for K-Means
 inertia = []
 for k in range(1, 11):
     kmeans = KMeans(n_clusters=k, random_state=42)
@@ -88,6 +90,7 @@ ax.set_xlabel('Number of Clusters')
 ax.set_ylabel('Inertia')
 st.pyplot(fig)
 
+# Apply K-Means Clustering
 optimal_clusters = 4
 kmeans = KMeans(n_clusters=optimal_clusters, random_state=42)
 df_cleaned['customer_segment'] = kmeans.fit_predict(X_scaled)
@@ -104,7 +107,7 @@ ax.set_title('Customer Segments Visualization using PCA')
 st.pyplot(fig)
 
 # Association Rule Mining
-transactions = df_cleaned.groupby(['product_id', 'product_name'])['main_category'].apply(list).values.tolist()
+transactions = df_cleaned.groupby(['product_id', 'main_category']).size().reset_index().values.tolist()
 te = TransactionEncoder()
 te_array = te.fit(transactions).transform(transactions)
 df_encoded = pd.DataFrame(te_array, columns=te.columns_)
@@ -117,28 +120,23 @@ st.write("Top Association Rules:")
 st.dataframe(rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']].head(10))
 
 # Sentiment Analysis
-st.subheader("Sentiment Analysis")
-df_cleaned['sentiment'] = df_cleaned['review_content'].apply(lambda x: TextBlob(str(x)).sentiment.polarity)
+if 'review_content' in df_cleaned.columns:
+    st.subheader("Sentiment Analysis")
+    df_cleaned['sentiment'] = df_cleaned['review_content'].apply(lambda x: TextBlob(str(x)).sentiment.polarity)
 
-fig, ax = plt.subplots(figsize=(10, 6))
-sns.histplot(df_cleaned['sentiment'], bins=20, color='purple', kde=True, ax=ax)
-ax.set_title('Sentiment Distribution')
-st.pyplot(fig)
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.histplot(df_cleaned['sentiment'], bins=20, color='purple', kde=True, ax=ax)
+    ax.set_title('Sentiment Distribution')
+    st.pyplot(fig)
 
-# Word Cloud
-review_text = ' '.join(df_cleaned['review_content'].astype(str).values)
-wordcloud = WordCloud(width=800, height=400, background_color='white', stopwords=STOPWORDS).generate(review_text)
+    # Word Cloud
+    review_text = ' '.join(df_cleaned['review_content'].astype(str).values)
+    wordcloud = WordCloud(width=800, height=400, background_color='white', stopwords=STOPWORDS).generate(review_text)
 
-fig, ax = plt.subplots(figsize=(10, 6))
-ax.imshow(wordcloud, interpolation='bilinear')
-ax.axis('off')
-ax.set_title('Word Cloud of Review Content')
-st.pyplot(fig)
-
-# Customer Segments by Sentiment
-df_cleaned['sentiment_label'] = pd.cut(df_cleaned['sentiment'], bins=[-1, -0.01, 0.01, 1], labels=['Negative', 'Neutral', 'Positive'])
-fig, ax = plt.subplots(figsize=(10, 6))
-sns.countplot(x='sentiment_label', data=df_cleaned, palette='viridis', ax=ax)
-ax.set_title('Customer Segments based on Sentiment')
-st.pyplot(fig)
-
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.imshow(wordcloud, interpolation='bilinear')
+    ax.axis('off')
+    ax.set_title('Word Cloud of Review Content')
+    st.pyplot(fig)
+else:
+    st.warning("The dataset does not contain review content for sentiment analysis.")
