@@ -8,3 +8,15 @@ scipy
 mlxtend
 wordcloud
 textblob
+StandardScaler
+LabelEncoder
+KMeans
+PCA
+SimpleImputer
+TransactionEncoder
+apriori
+association_rules
+WordCloud
+STOPWORDS
+from textblob import TextBlob
+import streamlit as st
